@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'moikk4/temp-converter'
+        DOCKER_IMAGE = 'franshk/temp-converter'
         DOCKER_TAG   = "${env.BUILD_NUMBER}"
     }
 
@@ -72,4 +72,3 @@ pipeline {
         }
     }
 }
-
