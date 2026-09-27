@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Moikk4/OP1.git'
+                git branch: 'main', url: 'https://github.com/Moikk4/OP1.git'
             }
         }
 
