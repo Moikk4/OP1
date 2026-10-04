@@ -53,6 +53,12 @@ pipeline {
             }
         }
 
+        stage('Verify Docker Image') {
+            steps {
+                bat "docker run --rm %DOCKER_IMAGE%:%DOCKER_TAG% --cli"
+            }
+        }
+
         stage('Push Docker Image to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials',
