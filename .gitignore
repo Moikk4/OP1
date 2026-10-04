@@ -3,3 +3,6 @@ target/
 *.class
 *.log
 
+
+data/
+dependency-reduced-pom.xml
