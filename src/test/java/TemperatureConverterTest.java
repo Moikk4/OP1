@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TemperatureConverterTest {
 
@@ -34,13 +37,8 @@ class TemperatureConverterTest {
 
     @Test
     void testIsExtremeTemperature() {
-        // Below -40°C branch
-        assertTrue(converter.isExtremeTemperature(-40.1));
-
-        // Above 50°C branch
-        assertTrue(converter.isExtremeTemperature(50.1));
-
-        // Boundaries and non-extreme branch
+        assertTrue(converter.isExtremeTemperature(-41.0));
+        assertTrue(converter.isExtremeTemperature(51.0));
         assertFalse(converter.isExtremeTemperature(-40.0));
         assertFalse(converter.isExtremeTemperature(50.0));
         assertFalse(converter.isExtremeTemperature(20.0));

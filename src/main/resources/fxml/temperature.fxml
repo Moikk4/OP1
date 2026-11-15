@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.temperature.controller.TemperatureController"
+            prefWidth="500" prefHeight="420">
+
+    <VBox spacing="12" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20">
+        <Label fx:id="titleLabel" text="%app.title"/>
+        <ComboBox fx:id="languageCombo" />
+
+        <HBox spacing="10">
+            <Label text="%label.input" />
+            <TextField fx:id="inputValueField" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="%label.from" />
+            <ComboBox fx:id="fromUnitCombo" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="%label.to" />
+            <ComboBox fx:id="toUnitCombo" />
+        </HBox>
+
+        <Button fx:id="convertButton" text="%button.convert" onAction="#convertTemperature" />
+
+        <Label fx:id="resultLabel" wrapText="true" />
+
+        <Label text="%button.history" />
+        <ListView fx:id="historyListView" prefHeight="120"/>
+    </VBox>
+</AnchorPane>
+

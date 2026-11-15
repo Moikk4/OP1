@@ -23,16 +23,21 @@ public class TempRecordDAO {
     }
 
     public TempRecord save(TempRecord record) {
+        return save(record, null);
+    }
+
+    public TempRecord save(TempRecord record, String language) {
         String sql = "INSERT INTO temp_records"
-                + " (input_value, from_unit, to_unit, result_value, created_at)"
-                + " VALUES (?, ?, ?, ?, ?)";
+                + " (input_value, from_unit, to_unit, result_value, language, created_at)"
+                + " VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setDouble(1, record.getInputValue());
             ps.setString(2, record.getFromUnit().name());
             ps.setString(3, record.getToUnit().name());
             ps.setDouble(4, record.getResultValue());
-            ps.setTimestamp(5, Timestamp.valueOf(record.getCreatedAt()));
+            ps.setString(5, language);
+            ps.setTimestamp(6, Timestamp.valueOf(record.getCreatedAt()));
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -71,6 +76,25 @@ public class TempRecordDAO {
             return records;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to list temp records", e);
+        }
+    }
+
+    /**
+     * Get the last N temperature conversion records, ordered by most recent first.
+     */
+    public List<TempRecord> findLast(int limit) {
+        String sql = "SELECT * FROM temp_records ORDER BY created_at DESC, id DESC LIMIT ?";
+        List<TempRecord> records = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    records.add(mapRow(rs));
+                }
+            }
+            return records;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch last " + limit + " temp records", e);
         }
     }
 

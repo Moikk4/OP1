@@ -1,9 +1,17 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.stream.Collectors;
+
+import org.h2.tools.RunScript;
 
 /**
  * Provides JDBC connections to the H2 database and initialises the schema.
@@ -14,26 +22,9 @@ import java.sql.Statement;
 public class DBConnection {
 
     public static final String DEFAULT_URL =
-            "jdbc:h2:file:./data/tempdb;AUTO_SERVER=TRUE";
+            "jdbc:h2:file:./data/tempdb;AUTO_SERVER=TRUE;MODE=MySQL";
     public static final String DEFAULT_USER = "sa";
     public static final String DEFAULT_PASSWORD = "";
-
-    private static final String CREATE_TEMP_RECORDS =
-            "CREATE TABLE IF NOT EXISTS temp_records ("
-                    + " id IDENTITY PRIMARY KEY,"
-                    + " input_value DOUBLE NOT NULL,"
-                    + " from_unit VARCHAR(20) NOT NULL,"
-                    + " to_unit VARCHAR(20) NOT NULL,"
-                    + " result_value DOUBLE NOT NULL,"
-                    + " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
-                    + " )";
-
-    private static final String CREATE_TEMPERATURE_UNITS =
-            "CREATE TABLE IF NOT EXISTS temperature_units ("
-                    + " id IDENTITY PRIMARY KEY,"
-                    + " name VARCHAR(50) NOT NULL UNIQUE,"
-                    + " symbol VARCHAR(10) NOT NULL"
-                    + " )";
 
     private DBConnection() {
         // utility class
@@ -49,16 +40,41 @@ public class DBConnection {
     }
 
     /**
-     * Create tables if they do not exist yet.
+     * Create tables and seed data from init.sql if they do not exist yet.
      */
     public static void initializeDatabase() {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(CREATE_TEMP_RECORDS);
-            stmt.execute(CREATE_TEMPERATURE_UNITS);
+
+            stmt.execute("DROP ALL OBJECTS");
+
+            // Load and execute init.sql
+            String initScript = loadInitScript();
+            if (initScript != null && !initScript.isBlank()) {
+                // Use H2's script runner to execute the SQL script
+                RunScript.execute(conn, new BufferedReader(new StringReader(initScript)));
+            }
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to initialise database", e);
         }
     }
-}
 
+    /**
+     * Load init.sql from classpath resources.
+     */
+    private static String loadInitScript() {
+        try (InputStream is = DBConnection.class.getResourceAsStream("/init.sql")) {
+            if (is == null) {
+                System.err.println("Warning: init.sql not found in resources");
+                return null;
+            }
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is, StandardCharsets.UTF_8))) {
+                return reader.lines().collect(Collectors.joining("\n"));
+            }
+        } catch (Exception e) {
+            System.err.println("Warning: Failed to load init.sql: " + e.getMessage());
+            return null;
+        }
+    }
+}

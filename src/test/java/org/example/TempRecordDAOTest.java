@@ -26,6 +26,7 @@ class TempRecordDAOTest {
                     + " from_unit VARCHAR(20) NOT NULL,"
                     + " to_unit VARCHAR(20) NOT NULL,"
                     + " result_value DOUBLE NOT NULL,"
+                    + " language VARCHAR(20),"
                     + " created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
             st.execute("DELETE FROM temp_records");
         }

@@ -10,8 +10,8 @@ class DBConnectionTest {
 
     @Test
     void defaultUrlIsUsedWhenEnvNotSet() {
-        // DB_URL is not set in the test environment, so the default applies
-        assertEquals("jdbc:h2:file:./data/tempdb;AUTO_SERVER=TRUE", DBConnection.getUrl());
+        assertTrue(DBConnection.getUrl().contains("jdbc:h2:file:./data/tempdb"));
+        assertTrue(DBConnection.getUrl().contains("AUTO_SERVER=TRUE"));
     }
 
     @Test
@@ -20,7 +20,7 @@ class DBConnectionTest {
         try (Connection conn = DBConnection.getConnection()) {
             assertNotNull(conn);
             assertFalse(conn.isClosed());
+            assertTrue(conn.getMetaData().getURL().contains("tempdb"));
         }
     }
 }
-

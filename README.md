@@ -186,3 +186,18 @@ OP1/
 
 - Course: Ohjelmistotuotantoprojekti 1
 - Repository: `Moikk4/OP1`
+
+## Assignment 6: Database Localization (Translation Table approach)
+
+This project uses the translation table approach for database localization. The core idea is that the system keeps a language-neutral `units` table with shared metadata such as `unit_key`, `symbol`, and `unit_type`, while all localized names and descriptions live in a separate `unit_translations` table keyed by `unit_id` and `lang`.
+
+The schema is therefore:
+
+- `units(id, unit_key, symbol, unit_type)`
+- `unit_translations(id, unit_id, lang, name, description)`
+
+This fits the assignment well because the database stays normalized, each language is stored as a new row instead of as a new schema column, and translation queries are straightforward with a single join. It also supports English fallback naturally via `COALESCE(t.name, t_en.name)` in the DAO, so any missing translation in Finnish, Swedish, Japanese, or Arabic automatically falls back to the English text. The approach is easy to extend when a new language is added: only a new `lang` row is required instead of a new column or new table.
+
+The application language selector changes both layers at once. The JavaFX `ResourceBundle` determines the static UI strings (buttons, titles, labels), while the database DAO queries the `unit_translations` table for the localized unit names and descriptions displayed in the dropdowns and result text. This keeps the interface consistent with the selected language and remains easy to maintain.
+
+The choice is intentionally not a field-per-language design because that would create many nullable columns and would force schema changes for every new language. It is also preferable to the row-per-language or table-per-language approach in this project because the translation table keeps data normalized, avoids duplicated non-text data, and is a common production design for real multilingual systems.
