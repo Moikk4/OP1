@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: op1-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: op1-deployment
+  namespace: op1-app
+  labels:
+    app: op1-temperature-converter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: op1-temperature-converter
+  template:
+    metadata:
+      labels:
+        app: op1-temperature-converter
+    spec:
+      containers:
+      - name: op1-app
+        image: moikk4/op1:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DISPLAY
+          value: ":0"
+        - name: JAVA_OPTS
+          value: "-Djava.awt.headless=false"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: x11-socket
+          mountPath: /tmp/.X11-unix
+          readOnly: true
+      volumes:
+      - name: x11-socket
+        hostPath:
+          path: /tmp/.X11-unix
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: op1-service
+  namespace: op1-app
+spec:
+  type: NodePort
+  selector:
+    app: op1-temperature-converter
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    nodePort: 30080

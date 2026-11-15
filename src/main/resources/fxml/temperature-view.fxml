@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.temperature.TemperatureController"
+            prefWidth="600" prefHeight="420">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <Label text="%label.language"/>
+            <ComboBox fx:id="languageCombo"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="12">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            <HBox spacing="10">
+                <TextField fx:id="inputField" promptText="%label.value"/>
+                <ComboBox fx:id="fromUnitCombo"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="%label.to"/>
+                <ComboBox fx:id="toUnitCombo"/>
+                <Button fx:id="convertButton" text="%button.convert"/>
+            </HBox>
+
+            <Label fx:id="resultLabel" text="%app.result"/>
+
+            <Label text="%label.history"/>
+            <ListView fx:id="historyList" prefHeight="180"/>
+        </VBox>
+    </center>
+</BorderPane>
+

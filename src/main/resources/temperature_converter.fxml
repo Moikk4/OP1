@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.TemperatureConverterController"
+      alignment="TOP_CENTER"
+      spacing="15"
+      stylesheets="@styles.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Title -->
+    <Label fx:id="titleLabel" text="%gui.title" styleClass="title-label"/>
+
+    <!-- Language Selector -->
+    <HBox alignment="CENTER" spacing="10">
+        <Label fx:id="languageLabel" text="%gui.language"/>
+        <ComboBox fx:id="languageComboBox" prefWidth="150" onAction="#onLanguageChange"/>
+    </HBox>
+
+    <!-- Input Row -->
+    <HBox alignment="CENTER" spacing="10">
+        <TextField fx:id="inputField" promptText="%gui.input.prompt" prefWidth="120"/>
+        <ComboBox fx:id="fromBox" prefWidth="100"/>
+        <Label text="→"/>
+        <ComboBox fx:id="toBox" prefWidth="100"/>
+        <Button fx:id="convertButton" text="%gui.convert.button" defaultButton="true" onAction="#convert"/>
+    </HBox>
+
+    <!-- Result -->
+    <Label fx:id="resultLabel" text="%gui.result" styleClass="result-label"/>
+
+    <!-- History Section -->
+    <Label fx:id="historyLabel" text="%gui.history" styleClass="history-title"/>
+    <ListView fx:id="historyList" prefHeight="180"/>
+
+</VBox>
