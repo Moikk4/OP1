@@ -43,4 +43,9 @@ class TemperatureConverterTest {
         assertFalse(converter.isExtremeTemperature(50.0));
         assertFalse(converter.isExtremeTemperature(20.0));
     }
+
+    @Test
+    void mainRunsWithoutThrowing() {
+        TemperatureConverter.main(new String[0]);
+    }
 }

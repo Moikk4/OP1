@@ -71,6 +71,21 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.14</version>
+                <configuration>
+                    <!-- Exclude JavaFX UI layer (controllers, GUI, app entry points).
+                         These require a running JavaFX toolkit / display and cannot be
+                         unit-tested headlessly. Coverage is measured on the core logic. -->
+                    <excludes>
+                        <exclude>**/*Controller.class</exclude>
+                        <exclude>**/*GUI.class</exclude>
+                        <exclude>**/Main.class</exclude>
+                        <exclude>**/*App.class</exclude>
+                        <exclude>**/TemperatureApp.class</exclude>
+                        <exclude>**/TemperatureConverterApp.class</exclude>
+                        <!-- Requires a live MySQL server; not unit-testable headlessly -->
+                        <exclude>**/dao/UnitDao.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

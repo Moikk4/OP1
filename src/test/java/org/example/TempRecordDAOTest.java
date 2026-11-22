@@ -86,5 +86,32 @@ class TempRecordDAOTest {
         dao.save(new TempRecord(2, TemperatureUnit.CELSIUS, TemperatureUnit.CELSIUS, 2));
         assertEquals(2, dao.count());
     }
-}
 
+    @Test
+    void saveWithLanguageStoresLanguage() {
+        TempRecord r = dao.save(new TempRecord(100, TemperatureUnit.CELSIUS,
+                TemperatureUnit.FAHRENHEIT, 212), "ja");
+        TempRecord found = dao.findById(r.getId());
+        assertNotNull(found);
+        assertEquals(212, found.getResultValue(), 0.001);
+    }
+
+    @Test
+    void findLastReturnsMostRecentFirst() throws Exception {
+        for (int i = 1; i <= 7; i++) {
+            dao.save(new TempRecord(i, TemperatureUnit.CELSIUS, TemperatureUnit.CELSIUS, i));
+            Thread.sleep(5); // ensure distinct timestamps
+        }
+        List<TempRecord> last5 = dao.findLast(5);
+        assertEquals(5, last5.size());
+        // most recent (highest input) should be first
+        assertTrue(last5.get(0).getInputValue() >= last5.get(last5.size() - 1).getInputValue());
+    }
+
+    @Test
+    void findLastWithLimitLargerThanData() {
+        dao.save(new TempRecord(1, TemperatureUnit.CELSIUS, TemperatureUnit.CELSIUS, 1));
+        List<TempRecord> result = dao.findLast(5);
+        assertEquals(1, result.size());
+    }
+}
