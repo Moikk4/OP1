@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>21.0.5</javafx.version>
         <mainClass>org.example.Main</mainClass>
+        <sonar.projectKey>op1</sonar.projectKey>
     </properties>
 
     <dependencies>
